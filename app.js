@@ -2,6 +2,7 @@ $(function() {
   var containerElement = $('#container');
   var dropzoneElement = $('#dropzone');
   var appElement = $('#app');
+  
   var container = new Transformable(containerElement);
 
   function makeDropZone(element, callback) {
@@ -26,19 +27,27 @@ $(function() {
       });
   }
 
-  function createVideoElement(file) {
-      return $('<video>').attr({
-        src: URL.createObjectURL(file),
-        autoplay: true,
-        loop: true,
-        controls: true,
-      });
+  function createVideoElement(url) {
+    return $('<video>').attr({
+      src: url,
+      autoplay: true,
+      loop: true,
+      controls: true,
+    });
   }
 
-  function createImageElement(file) {
-      return $('<img>').attr({
-        src: URL.createObjectURL(file),
-      });
+  function createImageElement(url) {
+    return $('<img>').attr({
+      src: url,
+    });
+  }
+
+  function createYoutubeEmbed(url) {
+    return $('<iframe>').attr({
+      width: containerElement.outerWidth(),
+      height: containerElement.outerHeight(),
+      src: url
+    });
   }
 
   function handleFiles(files) {
@@ -65,8 +74,9 @@ $(function() {
       if (element)
         return;
 
-      if (rule.extensions.indexOf(extension) > -1)
-        element = rule.handler(file);
+      if (rule.extensions.indexOf(extension) > -1) {
+        element = rule.handler(URL.createObjectURL(file));
+      }
     })
 
     if (element)
@@ -86,6 +96,21 @@ $(function() {
       handleFiles(files);
 
     e.target.files = null;
+  })
+
+  $('#embed-youtube').click(() => {
+    var inputUrl = prompt('Youtube video URL').trim();
+    debugger;
+    var youtubeId = (/.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#\&\?]*).*/.exec(inputUrl) || [])[1] || null;
+    
+    if (!youtubeId)
+      return;
+
+    var url = 'https://www.youtube.com/embed/' + youtubeId;
+      
+    var element = createYoutubeEmbed(url);
+
+    containerElement.empty().append(element);
   })
 
 });
