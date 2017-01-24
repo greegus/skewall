@@ -2,6 +2,7 @@ $(function() {
   var containerElement = $('#container');
   var dropzoneElement = $('#dropzone');
   var appElement = $('#app');
+  var container = new Transformable(containerElement);
 
   function makeDropZone(element, callback) {
       $(element).on({
@@ -40,7 +41,7 @@ $(function() {
       });
   }
 
-  function handleFileDrop(files) {
+  function handleFiles(files) {
     var file = files[0];
     var extension = file.name.split('.').pop();
     var element;
@@ -72,7 +73,19 @@ $(function() {
       containerElement.empty().append(element);
   }
 
-  makeTransformable(containerElement);
-  makeDropZone(appElement, handleFileDrop);
+  makeDropZone(appElement, handleFiles);
+
+  $('#reset-button').click(() => {
+    container.reset()
+  })
+
+  $('#file-input').change((e) => {
+    var files = jQuery.makeArray(e.target.files);
+
+    if (files.length)
+      handleFiles(files);
+
+    e.target.files = null;
+  })
 
 });

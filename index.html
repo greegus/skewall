@@ -34,12 +34,52 @@
 			overflow: hidden;
 		}
 
-		#dropzone {
+		#toolbar {
 			position: absolute;
 			top: 0px;
 			left: 0px;
-			bottom: 0px;
 			right: 0px;
+
+			display: flex;
+			justify-content: center;
+
+			padding: 20px;
+
+			z-index: 1;
+		}
+
+		#toolbar button {
+			background: white;
+			border: none;
+			border-radius: 4px;
+			color: black;
+			padding: 8px 24px;
+			font-size: 20px;
+			font-weight: 300;
+			outline: none;
+			position: relative;
+			overflow: hidden;
+		}
+
+		#toolbar button:hover {
+			background: #fd746c;
+			cursor: pointer;
+			color: white;
+		}
+
+		#toolbar button + button {
+			margin-left: 10px;
+		}
+		#toolbar button input[type=file] {
+			position: absolute;
+			top: 0px;
+			left: 0px;
+			
+			width: 100%;
+			height: 100%;
+
+			opacity: 0.001;
+			cursor: pointer;
 		}
 
 		#container {
@@ -91,6 +131,15 @@
 			object-fit: contain;
 		}
 
+		.hidding {
+			opacity: 0;
+			transition: opacity .15s;
+		}
+
+		body:hover .hidding {
+			opacity: 1;
+		}
+
 		.ui-draggable-handle::after {
 			content: '';
 			
@@ -116,8 +165,18 @@
 </head>
 <body>
 	<div id="app">
+		<div id="toolbar" class="hidding">
+			<button id="reset-button">
+				Reset
+			</button>
+
+			<button>
+				Select file 
+				<input id="file-input" type="file">
+			</button>
+		</div>
+
 		<div id="container">
-			<div id="dropzone"></div>
 			<h1>Drop your video file over here</h1>
 		</div>
 	</div>
