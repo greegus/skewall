@@ -6,5 +6,10 @@ I recently had this struggle with fitting the projected image to match the backg
 
 Live demo available at http://duxon.sk/skewall
 
+Supports:
+  - image files
+  - video files
+  - youtube videos
+
 Many thanks to Franklin Ta (fta2012) and his CSS matrix transformation script.
 https://gist.github.com/fta2012/bd63f7fd9f385870efc0
