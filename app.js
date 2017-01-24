@@ -3,15 +3,6 @@ $(function() {
   var dropzoneElement = $('#dropzone');
   var appElement = $('#app');
 
-  function preventDrop(element) {
-    $(element).on({
-      dragenter: (e) => e.preventDefault(),
-      dragleave: (e) => e.preventDefault(),
-      dragover: (e) => e.preventDefault(),
-      drop: (e) => e.preventDefault(),
-    });
-  }
-
   function makeDropZone(element, callback) {
       $(element).on({
         dragenter: (e) => e.preventDefault(),
@@ -34,21 +25,54 @@ $(function() {
       });
   }
 
-  function handleFileDrop(files) {
-    var url = URL.createObjectURL(files[0]);
-    
-    var videoElement = $('<video>').attr({
-      src: url,
-      autoplay: true,
-      loop: true,
-      controls: true,
-    });
+  function createVideoElement(file) {
+      return $('<video>').attr({
+        src: URL.createObjectURL(file),
+        autoplay: true,
+        loop: true,
+        controls: true,
+      });
+  }
 
-    containerElement.empty().append(videoElement);
+  function createImageElement(file) {
+      return $('<img>').attr({
+        src: URL.createObjectURL(file),
+      });
+  }
+
+  function handleFileDrop(files) {
+    var file = files[0];
+    var extension = file.name.split('.').pop();
+    var element;
+
+    if (!extension)
+      return;
+    
+    let knownExtension = [
+      {
+        extensions: ['jpg', 'png', 'gif', 'jpeg'],
+        handler: createImageElement
+      },
+
+      {
+        extensions: ['mp4', 'mov', 'avi', 'mpeg'],
+        handler: createVideoElement
+      },
+    ]
+
+    knownExtension.forEach((rule) => {
+      if (element)
+        return;
+
+      if (rule.extensions.indexOf(extension) > -1)
+        element = rule.handler(file);
+    })
+
+    if (element)
+      containerElement.empty().append(element);
   }
 
   makeTransformable(containerElement);
-  makeDropZone(dropzoneElement, handleFileDrop);
-  preventDrop(appElement)
+  makeDropZone(appElement, handleFileDrop);
 
 });
